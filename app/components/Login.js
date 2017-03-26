@@ -14,15 +14,15 @@ import {
 import update from 'immutability-helper';
 
 import styles from '../core/styles';
-import firebase from '../core/firebase';
+import resolver from '../core/di';
 import Footer from '../layout/Footer';
-
-import CookieManager from 'react-native-cookies';
 
 export default class Login extends Component {
 
   constructor(props) {
     super(props);
+
+    this.userService = resolver.get('userService');
 
     this.state = {
       form: {
@@ -68,16 +68,16 @@ export default class Login extends Component {
 
   onLogin() {
 
-    firebase.auth().signInWithEmailAndPassword(`${this.state.form.u}@univa.mx`, this.state.form.p)
-    .then((user) => {
+    this.props.beforeLogin();
+
+    this.userService.auth(this.state.form.u,this.state.form.p).then((user) => {
         ToastAndroid.show('Login Success', ToastAndroid.SHORT);
-        // this will replace myself with the other component (no going back)
         Keyboard.dismiss();
-        this.props.navigator.push({id: "Main"});
-    })
-    .catch((error) => {
-        console.log(error);
+
+        this.props.onLogin(true);
+    }).catch((error) => {
         ToastAndroid.show('Login Error', ToastAndroid.SHORT);
+        this.props.onLogin(false);
     });
 
   }
