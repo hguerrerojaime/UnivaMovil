@@ -22,8 +22,7 @@ export default class Container extends Component {
   }
 
   renderScene(route, navigator) {
-     console.log(route)
-     return <Text>{route.id}</Text>;
+     return route.component;
   }
 
   getNavigator() {

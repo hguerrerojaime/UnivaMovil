@@ -11,14 +11,13 @@ import update from 'immutability-helper';
 
 import styles from '../core/styles';
 import firebase from '../core/firebase';
+import resolver from '../core/di';
 
 import Header from '../layout/Header';
 import Footer from '../layout/Footer';
-
-import Home from './Home';
 import Container from './Container';
 
-import resolver from '../core/di';
+
 
 export default class Main extends Component {
 
@@ -62,8 +61,6 @@ export default class Main extends Component {
 
         let currentRoutes = navigator.getCurrentRoutes();
         let existingAction = currentRoutes.find((a) => a.id == action.id);
-
-        console.log(existingAction);
 
          if (existingAction) {
             navigator.jumpTo(action);

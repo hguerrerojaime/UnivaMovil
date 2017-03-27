@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styles from './core/styles';
-import routes from './core/navigation';
 import resolver from './core/di';
 
 import {
