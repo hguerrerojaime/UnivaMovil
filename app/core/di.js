@@ -1,12 +1,15 @@
 import React from 'react';
 import ReactDI from 'react-di';
 
-let resolver = new ReactDI({
-    message: aMessageService,
-    alert: anAlertService
-});
+import UserService from '../services/UserService';
+import CookieService from '../services/CookieService';
+import ImageService from '../services/ImageService';
 
-React.inject()
+let resolver = new ReactDI({
+    userService: new UserService(),
+    cookieService: new CookieService(),
+    imageService: new ImageService()
+});
 
 export default resolver;
 
