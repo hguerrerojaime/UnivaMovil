@@ -2,23 +2,22 @@ import React, { Component } from 'react';
 
 import {
   View,
-  Button,
-  ToolbarAndroid,
-  Text,
-  TextInput,
-  Switch,
-  ToastAndroid,
-  Image
+  Text
 } from 'react-native';
 
-export default class Gallery extends Component {
+export default class UnivaMap extends Component {
+
+  constructor(props) {
+    super(props);
+
+  }
 
   render() {
 
     return (
       <View>
         <View style={{ width: 250 }}>
-            <Text>Esta es la Galeria</Text>
+            <Text>Ubicaciones</Text>
         </View>
       </View>
     );

@@ -2,61 +2,84 @@ import React, { Component } from 'react';
 
 import {
   View,
-  Button,
-  ToolbarAndroid,
   Text,
-  TextInput,
-  Switch,
   ToastAndroid,
-  Navigator,
-  Image
+  BackAndroid
 } from 'react-native';
 
 import update from 'immutability-helper';
 
 import styles from '../core/styles';
 import firebase from '../core/firebase';
+import resolver from '../core/di';
 
 import Header from '../layout/Header';
 import Footer from '../layout/Footer';
+import Container from './Container';
 
-import Home from './Home';
+
 
 export default class Main extends Component {
 
   constructor(props) {
     super(props);
 
+    this.userService = resolver.get('userService');
+
+    BackAndroid.addEventListener('hardwareBackPress', () => {
+      if (this.container) {
+        let navigator = this.container.getNavigator();
+
+        if (navigator.getCurrentRoutes().length === 1  ) {
+           return false;
+        }
+        navigator.pop();
+        return true;
+      }
+
+    });
+
   }
 
   render() {
 
-    // <Navigator initialRoute={{ id:'Home' }}
-    //   renderScene={this.renderScene.bind(this)}
-    //  />
+
 
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <Header onActionSelected={this.onActionSelected.bind(this)} />
-        <Navigator initialRoute={{ id:'Home' }}
-          ref={(navigator) => this.navigator = navigator}
-          renderScene={this.renderScene.bind(this)}
-         />
+        <Container ref={(c) => this.container = c} />
       </View>
     );
   }
 
   onActionSelected(action) {
-    this.navigator.push(action);
+
+      let navigator = this.container.getNavigator();
+
+      if (action.id != 'Logout') {
+
+        let currentRoutes = navigator.getCurrentRoutes();
+        let existingAction = currentRoutes.find((a) => a.id == action.id);
+
+         if (existingAction) {
+            navigator.jumpTo(action);
+         } else {
+            navigator.push(action);
+         }
+
+      } else {
+         this.doLogout();
+      }
+
   }
 
-  renderScene(route, navigator) {
-     console.log("LOADING ROUTE "+route.id);
-     if (route.id === 'Home') {
-       return <Home navigator={navigator} />;
-     }
-
-     return null;
+  doLogout() {
+    this.userService.logout();
+    ToastAndroid.show('Logged Out', ToastAndroid.SHORT);
+    this.props.onLogout();
   }
+
+
 
 }
